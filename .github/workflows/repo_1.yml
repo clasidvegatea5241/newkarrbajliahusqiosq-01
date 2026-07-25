@@ -33,12 +33,24 @@ jobs:
           curl -s -H "Authorization: Bearer $ORCHESTRATOR_TOKEN" "$MATRIX_DB_HOST/api/farm/runner-env?group=$GROUP_ID" > runner_env.json
 
           # Repo 1 is assigned to Slot 1. It only pulls ACCOUNT_1.
-          echo "ACCOUNT_1=$(jq -r .account_1 runner_env.json)" >> .env
-          
-          
-          # Tell the bot where the MongoDB is!
-          echo "SESSION_MONGODB_URI=${{ secrets.SESSION_MONGODB_URI }}" >> .env
+          echo "ACCOUNT_1_EMAIL=\$(jq -r .account_1 runner_env.json)" >> .env
+          echo "ACCOUNT_1_PASSWORD=\$(jq -r .password_1 runner_env.json)" >> .env
+          echo "ACCOUNT_1_TOTP_SECRET=\$(jq -r .totp_secret_1 runner_env.json)" >> .env
+          echo "ACCOUNT_1_RECOVERY_EMAIL=\$(jq -r .recovery_email_1 runner_env.json)" >> .env
+          echo "ACCOUNT_1_GEO_LOCALE=\$(jq -r .geo_locale_1 runner_env.json)" >> .env
+          echo "ACCOUNT_1_LANG_CODE=\$(jq -r .lang_code_1 runner_env.json)" >> .env
+          echo "ACCOUNT_1_PROXY_HTTP=\$(jq -r .proxy_http_1 runner_env.json)" >> .env
+          echo "ACCOUNT_1_PROXY_URL=\$(jq -r .proxy_url_1 runner_env.json)" >> .env
+          echo "ACCOUNT_1_PROXY_PORT=\$(jq -r .proxy_port_1 runner_env.json)" >> .env
+          echo "ACCOUNT_1_PROXY_USERNAME=\$(jq -r .proxy_username_1 runner_env.json)" >> .env
+          echo "ACCOUNT_1_PROXY_PASSWORD=\$(jq -r .proxy_password_1 runner_env.json)" >> .env
+          echo "ACCOUNT_1_SAVE_FINGERPRINT_MOBILE=\$(jq -r .save_fingerprint_mobile_1 runner_env.json)" >> .env
+          echo "ACCOUNT_1_SAVE_FINGERPRINT_DESKTOP=\$(jq -r .save_fingerprint_desktop_1 runner_env.json)" >> .env
+          echo "SESSION_MONGODB_URI=\$\{\{ secrets.SESSION_MONGODB_URI \}\}" >> .env
 
+          echo "========================================="
+          echo "  Currently loading data for SLOT 1"
+          echo "========================================="
           echo "Successfully generated .env file from Matrix DB!"
 
       - name: Run Farm (V4)
@@ -77,7 +89,7 @@ jobs:
           fi
 
           if [ "$SHOULD_COMMIT" = "true" ]; then
-            echo "Keepalive condition met. Creating automated commit..."
+echo "Keepalive condition met. Creating automated commit..."
             git config --global user.name "github-actions[bot]"
             git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
