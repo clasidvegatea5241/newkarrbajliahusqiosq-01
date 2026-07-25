@@ -46,7 +46,7 @@ jobs:
           echo "ACCOUNT_1_PROXY_PASSWORD=\$(jq -r .proxy_password_1 runner_env.json)" >> .env
           echo "ACCOUNT_1_SAVE_FINGERPRINT_MOBILE=\$(jq -r .save_fingerprint_mobile_1 runner_env.json)" >> .env
           echo "ACCOUNT_1_SAVE_FINGERPRINT_DESKTOP=\$(jq -r .save_fingerprint_desktop_1 runner_env.json)" >> .env
-          echo "SESSION_MONGODB_URI=\$\{\{ secrets.SESSION_MONGODB_URI \}\}" >> .env
+          echo "SESSION_MONGODB_URI=${{ secrets.SESSION_MONGODB_URI }}" >> .env
 
           echo "========================================="
           echo "  Currently loading data for SLOT 1"
