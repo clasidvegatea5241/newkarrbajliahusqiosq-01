@@ -18,22 +18,23 @@ run_container() {
     echo -e "\n=== Running Container ==="
     echo "Running with custom flags:"
     echo "  --shm-size=4g"
-    echo "  -e MIN_SLEEP_MINUTES=1"
-    echo "  -e MAX_SLEEP_MINUTES=2"
+    echo "  -e MIN_SLEEP_MINUTES=15"
+    echo "  -e MAX_SLEEP_MINUTES=50"
     echo "  -e SKIP_RANDOM_SLEEP=true"
     echo "  --env-file .env"
 
     # Process config.json Override right before running
+    # CRITICAL FIX: We MUST always mount the config directory even if there is no override,
+    # otherwise the container's entrypoint crashes trying to copy the example file into a missing folder!
+    mkdir -p config
     CONFIG_OVERRIDE=$(jq -r ".config_override_$SLOT" runner_env.json)
     if [ "$CONFIG_OVERRIDE" != "null" ] && [ -n "$CONFIG_OVERRIDE" ]; then
-        mkdir -p config
         echo "$CONFIG_OVERRIDE" > config/config.json
         echo "[!] Applied custom config.json override from MSR-Database."
-        VOLUME_MOUNT="-v $(pwd)/config:/usr/src/microsoft-rewards-script/config"
     else
-        echo "[-] Using default config settings."
-        VOLUME_MOUNT=""
+        echo "[-] Using default config settings. (Mounted empty config dir to prevent crash)"
     fi
+    VOLUME_MOUNT="-v $(pwd)/config:/usr/src/microsoft-rewards-script/config"
 
     # Run container in detached mode (Passing .env so the container gets the Bootstrapper variables)
     CONTAINER_ID=$(docker run -d \
