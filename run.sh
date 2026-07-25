@@ -18,8 +18,8 @@ run_container() {
     echo -e "\n=== Running Container ==="
     echo "Running with custom flags:"
     echo "  --shm-size=4g"
-    echo "  -e MIN_SLEEP_MINUTES=15"
-    echo "  -e MAX_SLEEP_MINUTES=50"
+    echo "  -e MIN_SLEEP_MINUTES=1"
+    echo "  -e MAX_SLEEP_MINUTES=2"
     echo "  -e SKIP_RANDOM_SLEEP=true"
     echo "  --env-file .env"
 
